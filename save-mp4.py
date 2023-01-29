@@ -29,7 +29,16 @@ print("URL: ", url)
 if not url or not url.startswith("http"):
 	url = input("No URL found - enter URL to download: ")
 	
-ydl_opts = {'outtmpl': os.path.join(outdir, '%(title)s.%(ext)s')}
+ydl_opts = {
+	'outtmpl': os.path.join(outdir, '%(title)s.%(ext)s'),
+	"format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4",
+	"socket_timeout": 10,
+	"retries": 10,
+	"keepvideo": False,
+	"noplaylist": True,
+	"quiet": True,
+	"no_warnings": True,
+}
 
 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 	info = ydl.extract_info(url, download=True)
