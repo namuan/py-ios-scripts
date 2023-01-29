@@ -15,9 +15,18 @@ try:
 	os.mkdir(outdir)
 except FileExistsError:
 	pass
-	
-ydl_opts = {'outtmpl': os.path.join(outdir, '%(title)s.%(ext)s')}
-	
+
+ydl_opts = {
+	'outtmpl': os.path.join(outdir, '%(title)s.%(ext)s'),
+	"format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4",
+	"socket_timeout": 10,
+	"retries": 10,
+	"keepvideo": False,
+	"noplaylist": True,
+	"quiet": True,
+	"no_warnings": True,
+}
+
 def download_video(url):
 	print("URL: ", url)
 	
