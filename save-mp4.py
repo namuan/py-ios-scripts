@@ -31,7 +31,7 @@ if not url or not url.startswith("http"):
 	
 ydl_opts = {
 	'outtmpl': os.path.join(outdir, '%(title)s.%(ext)s'),
-	"format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4",
+	"format": "bestvideo[ext=mp4]",
 	"socket_timeout": 10,
 	"retries": 10,
 	"keepvideo": False,
