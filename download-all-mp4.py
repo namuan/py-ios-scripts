@@ -18,10 +18,8 @@ except FileExistsError:
 
 ydl_opts = {
 	'outtmpl': os.path.join(outdir, '%(title)s.%(ext)s'),
-	"format": "bestvideo[ext=mp4]",
 	"socket_timeout": 10,
 	"retries": 10,
-	"keepvideo": False,
 	"noplaylist": True,
 	"quiet": True,
 	"no_warnings": True,
