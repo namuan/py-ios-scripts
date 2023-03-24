@@ -15,9 +15,17 @@ except FileExistsError:
     pass
 
 
+def progress_callback(stream, chunk, bytes_remaining):
+    total_size = stream.filesize
+    bytes_downloaded = total_size - bytes_remaining
+    percent_complete = bytes_downloaded / total_size * 100
+    print(f'{percent_complete:.2f}% downloaded')
+
+
 def download_video(url):
     yt = YouTube(url)
     print("🏎 Starting download of", yt.title)
+    yt.register_on_progress_callback(progress_callback)
     console.show_activity()
     downloaded_file = yt.streams \
         .filter(progressive=True, file_extension='mp4') \
