@@ -8,14 +8,15 @@ Usage:
 
 
 def calculate_values(x):
-    a = 0.99 * x
-    b = 0.99 * a
-    c = 0.99 * b
-    d = 0.99 * c
+    """
+    Calculate a series of values by repeatedly multiplying x by 0.99.
+    Also calculate 1% of each value and the value after subtracting 1%.
+    Format subtracted_values to 2 decimal places.
+    """
+    values = [x]
+    for _ in range(4):
+        values.append(0.99 * values[-1])
 
-    # Calculate 1% of each value and the value after subtraction
-    # Format subtracted_values to 2 decimal places
-    values = [x, a, b, c, d]
     one_percent_values = [0.01 * value for value in values]
     subtracted_values = [
         round(value - one_percent, 2) for value, one_percent in zip(values, one_percent_values)
@@ -25,13 +26,15 @@ def calculate_values(x):
 
 
 def print_table(x):
+    """
+    Print a table of buy orders, with each row representing a different order.
+    The number of points for each order is calculated by the calculate_values function.
+    """
     values, one_percent_values, subtracted_values = calculate_values(x)
+    points = [0.1, 0.2, 0.4, 0.8, 1]
     rows = [
-        f"Buy {subtracted_values[0]} for 0.1 per point",
-        f"Buy {subtracted_values[1]} for 0.2 per point",
-        f"Buy {subtracted_values[2]} for 0.4 per point",
-        f"Buy {subtracted_values[3]} for 0.8 per point",
-        f"Buy {subtracted_values[4]} for 1 per point",
+        f"Buy {subtracted_value} for {point} per point"
+        for subtracted_value, point in zip(subtracted_values, points)
     ]
     for row in rows:
         print(row)
