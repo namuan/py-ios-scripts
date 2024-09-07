@@ -1,6 +1,13 @@
+import os
+
 import reminders
 from datetime import datetime, timedelta
 
+outdir = os.path.expanduser("~/Documents/Reminders")
+try:
+    os.mkdir(outdir)
+except FileExistsError:
+    pass
 
 def get_and_save_recent_reminders(calendar_id, days=7, filename='recent_reminders.md'):
     # Get the specific calendar
@@ -51,11 +58,15 @@ def get_and_save_recent_reminders(calendar_id, days=7, filename='recent_reminder
             markdown_content += f"  - Notes: {reminder.notes}\n"
         markdown_content += "\n"
 
+    # Generate filename with current date
+    filename = f"reminders_{datetime.now().strftime('%Y%m%d')}.md"
+    filepath = os.path.join(outdir, filename)
+
     # Save to file
-    with open(filename, 'w', encoding='utf-8') as f:
+    with open(filepath, 'w', encoding='utf-8') as f:
         f.write(markdown_content)
 
-    print(f"Reminders list saved to {filename}")
+    print(f"Reminders list saved to {filepath}")
 
     # Also print to console
     print("\nRecent Reminders:")
