@@ -46,16 +46,7 @@ def get_and_save_recent_reminders(calendar_id, days=7, filename='recent_reminder
     markdown_content += f"*Last {days} days (as of {datetime.now().strftime('%Y-%m-%d %H:%M')})*\n\n"
 
     for reminder in recent_reminders:
-        status = "x" if reminder.completed else " "
-        due_date = reminder.due_date.strftime("%Y-%m-%d %H:%M") if reminder.due_date else "No due date"
-        completion_date = reminder.completion_date.strftime(
-            "%Y-%m-%d %H:%M") if reminder.completion_date else "Not completed"
-
-        markdown_content += f"- [{status}] **{reminder.title}**\n"
-        markdown_content += f"  - Due: {due_date}\n"
-        markdown_content += f"  - Completed: {completion_date}\n"
-        if reminder.notes:
-            markdown_content += f"  - Notes: {reminder.notes}\n"
+        markdown_content += f"- **{reminder.title}**\n"
         markdown_content += "\n"
 
     # Generate filename with current date
