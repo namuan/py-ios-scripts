@@ -9,7 +9,7 @@ try:
 except FileExistsError:
     pass
 
-def get_and_save_recent_reminders(calendar_id, days=7, filename='recent_reminders.md'):
+def get_and_save_recent_reminders(calendar_id, days=7):
     # Get the specific calendar
     calendar = reminders.get_calendar(calendar_id)
 
@@ -59,9 +59,15 @@ def get_and_save_recent_reminders(calendar_id, days=7, filename='recent_reminder
 
     print(f"Reminders list saved to {filepath}")
 
+    deleted_count = 0
+    for reminder in recent_reminders:
+        reminders.delete_reminder(reminder)
+        deleted_count += 1
+
     # Also print to console
     print("\nRecent Reminders:")
     print(markdown_content)
+    print(f"\nTotal reminders deleted: {deleted_count}")
 
 
 # Calendar ID for the "Bookmarks" calendar
