@@ -1,5 +1,4 @@
 import os
-
 import reminders
 from datetime import datetime, timedelta
 
@@ -9,7 +8,7 @@ try:
 except FileExistsError:
     pass
 
-def get_and_save_recent_reminders(calendar_id, days=7):
+def get_and_save_recent_reminders(calendar_id):
     # Get the specific calendar
     calendar = reminders.get_calendar(calendar_id)
 
@@ -17,7 +16,7 @@ def get_and_save_recent_reminders(calendar_id, days=7):
         print(f"No calendar found with ID: {calendar_id}")
         return
 
-    print(f"Retrieving reminders in '{calendar.title}' calendar for the last {days} days...")
+    print(f"Retrieving reminders in '{calendar.title}' calendar from yesterday and earlier...")
 
     # Get all reminders from this calendar
     calendar_reminders = reminders.get_reminders(calendar=calendar)
@@ -26,26 +25,26 @@ def get_and_save_recent_reminders(calendar_id, days=7):
         print("No reminders found in this calendar.")
         return
 
-    # Calculate the date 7 days ago
-    seven_days_ago = datetime.now() - timedelta(days=days)
+    # Calculate yesterday's date (midnight)
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
-    recent_reminders = []
+    filtered_reminders = []
     for reminder in calendar_reminders:
         if reminder.completed and reminder.completion_date:
-            if reminder.completion_date >= seven_days_ago:
-                recent_reminders.append(reminder)
-        elif not reminder.due_date or reminder.due_date >= seven_days_ago:
-            recent_reminders.append(reminder)
+            if reminder.completion_date < today:
+                filtered_reminders.append(reminder)
+        elif reminder.due_date and reminder.due_date < today:
+            filtered_reminders.append(reminder)
 
-    if not recent_reminders:
-        print(f"No reminders found in the last {days} days.")
+    if not filtered_reminders:
+        print("No reminders found from yesterday or earlier.")
         return
 
     # Create Markdown content
-    markdown_content = f"# Recent Reminders in '{calendar.title}' Calendar\n\n"
-    markdown_content += f"*Last {days} days (as of {datetime.now().strftime('%Y-%m-%d %H:%M')})*\n\n"
+    markdown_content = f"# Reminders in '{calendar.title}' Calendar\n\n"
+    markdown_content += f"*From yesterday and earlier (as of {datetime.now().strftime('%Y-%m-%d %H:%M')})*\n\n"
 
-    for reminder in recent_reminders:
+    for reminder in filtered_reminders:
         markdown_content += f"- **{reminder.title}**\n"
         markdown_content += "\n"
 
@@ -60,18 +59,18 @@ def get_and_save_recent_reminders(calendar_id, days=7):
     print(f"Reminders list saved to {filepath}")
 
     deleted_count = 0
-    for reminder in recent_reminders:
+    for reminder in filtered_reminders:
         reminders.delete_reminder(reminder)
         deleted_count += 1
 
     # Also print to console
-    print("\nRecent Reminders:")
+    print("\nFiltered Reminders:")
     print(markdown_content)
     print(f"\nTotal reminders deleted: {deleted_count}")
-
 
 # Calendar ID for the "Bookmarks" calendar
 bookmarks_calendar_id = "9F7D5A87-C671-41A6-BE0B-C6038AC7E9B8"
 
 # Run the function
 get_and_save_recent_reminders(bookmarks_calendar_id)
+
